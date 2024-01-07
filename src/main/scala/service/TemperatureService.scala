@@ -22,7 +22,7 @@ object TemperatureService {
 
         def getTemperature(city: CityName): ZStream[Client, Throwable, Double] = {
           ZStream
-            .fromEffect(CoordinateService.getCityToCoord(city))
+            .fromEffect(CoordinatesService.getCityToCoord(city))
             .flatMap(coord => fetchData(coord.latitude.toString, coord.longitude.toString))
             .mapM(res => res.body.asString.map(body => decodeJson[CurrentWeather](body)))
             .collect { case Right(weather) => weather.temperature }

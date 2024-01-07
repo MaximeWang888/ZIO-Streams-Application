@@ -7,9 +7,11 @@ object DataModel {
   opaque type CityName = String
   opaque type Date = String
 
-  case class Coordinates(latitude: Latitude, longitude: Longitude)
+  case class Coordinates(latitude: Latitude, 
+                         longitude: Longitude)
 
-  case class City(name: CityName, coordinates: Coordinates)
+  case class City(name: CityName, 
+                  coordinates: Coordinates)
 
   case class CurrentWeather(coordinates: Coordinates,
                             temperature: Double,
@@ -17,5 +19,7 @@ object DataModel {
                             date: Date)
 
   enum WeatherStatus:
-    case Sun, Rain, Snow
+    case Sun, 
+    Rain, 
+    Snow
 }
