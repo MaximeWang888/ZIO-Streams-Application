@@ -17,7 +17,7 @@ lazy val root = project
       name := "scala3-zio-streams",
       libraryDependencies ++= Seq(
           "dev.zio"       %% "zio"            % zioVersion,
-//          "dev.zio"       %% "zio-streams"    % zioVersion,
+          "dev.zio"       %% "zio-streams"    % zioVersion,
           "dev.zio"       %% "zio-http"       % zioHttpVersion,
           "dev.zio"       %% "zio-json"       % zioJsonVersion,
           "io.getquill"   %% "quill-zio"      % zioQuill,
@@ -26,6 +26,7 @@ lazy val root = project
           "io.d11"        %% "zhttp"          % "2.0.0-RC10",
           "dev.zio"       %% "zio-logging"       % "2.1.15",
           "dev.zio"       %% "zio-logging-slf4j" % "2.1.15",
-          "org.slf4j"      % "slf4j-simple"      % "2.0.9"
+          "org.slf4j"      % "slf4j-simple"      % "2.0.9",
+          "mysql" % "mysql-connector-java" % "8.0.23",
       )
   )
