@@ -1,5 +1,6 @@
 package controller
 
+import model.DataModelDao
 import service.WeatherService.getCitiesMatchingWeatherCondition
 import zio.http.*
 
