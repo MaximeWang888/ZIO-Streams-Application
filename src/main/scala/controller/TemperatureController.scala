@@ -1,6 +1,6 @@
 package controller
 
-import service.TemperatureServiceImpl.{getRecommandationByCity, getTemperatureOfCity}
+import service.TemperatureService.{getRecommandationByCity, getTemperatureOfCity}
 import zio.http.*
 
 object TemperatureController {

@@ -17,14 +17,13 @@ object WeatherService {
     val result: CharSequence = allCitiesResult match {
       case Some(cities) =>
         val matchingCities = cities.filter { city =>
-          // Assuming you have a method to fetch weather condition for a city
-          // Replace `getWeatherConditionForCity` with the actual method you use
           val weatherCondition = dataModelDao.getWeatherConditionForCity(city.name)
           weatherCondition.equalsIgnoreCase(condition)
         }
 
         if (matchingCities.nonEmpty) {
-          matchingCities.mkString(", ") 
+          val cityNames = matchingCities.map(_.name)
+          cityNames.mkString(", ")
         } else {
           "No cities match the specified weather condition."
         }

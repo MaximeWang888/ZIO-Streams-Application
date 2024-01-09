@@ -8,7 +8,7 @@ trait TemperatureService {
   def getRecommandationByCity(cityName: String): CharSequence
 }
 
-object TemperatureServiceImpl extends TemperatureService {
+object TemperatureService {
     private val dbManager = new DatabaseManager()
     private val dataModelDao = new DataModelDao(dbManager)
     def getTemperatureOfCity(cityName: String): CharSequence = {

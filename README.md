@@ -66,7 +66,9 @@ Voici la structure des répertoires de ce projet :
 │   │   │   │   ├── TemperatureController.scala
 │   │   │   │   └── WeatherController.scala
 │   │   │   ├── model
-│   │   │   │   └── DataModel.scala
+│   │   │   │   ├── DataModel.scala
+│   │   │   │   ├── DataModelDao.scala
+│   │   │   │   └── DatabaseManager.scala
 │   │   │   ├── service
 │   │   │   │   ├── TemperatureService.scala
 │   │   │   │   └── WeatherService.scala
@@ -87,7 +89,8 @@ Voici la structure des répertoires de ce projet :
 ```
 
 - src/main/scala/controller: Contient les fichiers des contrôleurs, tels que TemperatureController.scala et WeatherController.scala.
-- src/main/scala/model: Contient les fichiers de définition de modèle, par exemple, DataModel.scala.
+- src/main/scala/model: Contient les fichiers de définition de modèle, par exemple, DataModel.scala. 
+De plus, il y a les fichiers DatabaseManager et DataModelDao pour gérer l'accès aux données et la gestion de la base de données.
 - src/main/scala/service: Contient les fichiers de services, tels que TemperatureService.scala et WeatherService.scala.
 - src/main/scala: Contient le fichier principal de l'application, MainApp.scala.
 - src/main/resources: Contient les fichiers de ressources de l'application, par exemple, application.conf.

@@ -6,12 +6,12 @@ import java.sql.{Connection, PreparedStatement, ResultSet}
 
 class DataModelDao(dbManager: DatabaseManager) {
 
-  def getTemperatureFromCoord(coordinates: Coordinates): Option[DataModel.Temperature] = {
-    var preparedStatement: PreparedStatement = null
-    var resultSet: ResultSet = null
+  private lazy val connection: Connection = dbManager.getConnection
+  private var preparedStatement: PreparedStatement = _
+  private var resultSet: ResultSet = _
 
+  def getTemperatureFromCoord(coordinates: Coordinates): Option[DataModel.Temperature] = {
     try {
-      val connection: Connection = dbManager.getConnection
       val query = "SELECT temperature, weatherDescription, date FROM CurrentWeather WHERE latitude = ? AND longitude = ?"
       preparedStatement = connection.prepareStatement(query)
       preparedStatement.setDouble(1, coordinates.latitude.asInstanceOf[Double])
@@ -32,11 +32,7 @@ class DataModelDao(dbManager: DatabaseManager) {
   }
 
   def getAllCities: Option[List[DataModel.City]] = {
-    var preparedStatement: PreparedStatement = null
-    var resultSet: ResultSet = null
-
     try {
-      val connection: Connection = dbManager.getConnection
       val query = "SELECT name, latitude, longitude FROM City"
       preparedStatement = connection.prepareStatement(query)
 
@@ -49,7 +45,8 @@ class DataModelDao(dbManager: DatabaseManager) {
         val latitude = resultSet.getDouble("latitude")
         val longitude = resultSet.getDouble("longitude")
 
-        val coordinates = DataModel.Coordinates(latitude.asInstanceOf[DataModel.Latitude], longitude.asInstanceOf[DataModel.Longitude])
+        val coordinates = DataModel.Coordinates(latitude.asInstanceOf[DataModel.Latitude],
+                                                longitude.asInstanceOf[DataModel.Longitude])
         val city = DataModel.City(cityName.asInstanceOf[DataModel.CityName], coordinates)
         cities = cities :+ city
       }
@@ -66,11 +63,7 @@ class DataModelDao(dbManager: DatabaseManager) {
   }
 
   def getCityToCoord(cityName: String): Option[DataModel.City] = {
-    var preparedStatement: PreparedStatement = null
-    var resultSet: ResultSet = null
-
     try {
-      val connection: Connection = dbManager.getConnection
       val query = "SELECT name, latitude, longitude FROM City WHERE name = ?"
       preparedStatement = connection.prepareStatement(query)
       preparedStatement.setString(1, cityName)
@@ -82,7 +75,8 @@ class DataModelDao(dbManager: DatabaseManager) {
         val latitude = resultSet.getDouble("latitude")
         val longitude = resultSet.getDouble("longitude")
 
-        val coordinates = DataModel.Coordinates(latitude.asInstanceOf[DataModel.Latitude], longitude.asInstanceOf[DataModel.Longitude])
+        val coordinates = DataModel.Coordinates(latitude.asInstanceOf[DataModel.Latitude],
+                                                longitude.asInstanceOf[DataModel.Longitude])
         Some(DataModel.City(cityName.asInstanceOf[DataModel.CityName], coordinates))
       } else {
         None
@@ -94,11 +88,7 @@ class DataModelDao(dbManager: DatabaseManager) {
   }
 
   def getCityRecommendation(temperature: Temperature): Option[DataModel.TemperatureRecommendation] = {
-    var preparedStatement: PreparedStatement = null
-    var resultSet: ResultSet = null
-
     try {
-      val connection: Connection = dbManager.getConnection
       val query =
         "SELECT temperatureRange, minTemperature, maxTemperature, recommendation " +
           "FROM TemperatureRecommendation " +
@@ -126,12 +116,9 @@ class DataModelDao(dbManager: DatabaseManager) {
   }
 
   def getWeatherConditionForCity(cityName: DataModel.CityName): String = {
-    var preparedStatement: PreparedStatement = null
-    var resultSet: ResultSet = null
-
     try {
-      val connection: Connection = dbManager.getConnection
-      val query = "SELECT weatherDescription FROM CurrentWeather WHERE latitude = (SELECT latitude FROM City WHERE name = ?) AND longitude = (SELECT longitude FROM City WHERE name = ?)"
+      val query = "SELECT weatherDescription FROM CurrentWeather WHERE latitude = " +
+        "(SELECT latitude FROM City WHERE name = ?) AND longitude = (SELECT longitude FROM City WHERE name = ?)"
       preparedStatement = connection.prepareStatement(query)
       preparedStatement.setString(1, cityName.asInstanceOf[String])
       preparedStatement.setString(2, cityName.asInstanceOf[String])
