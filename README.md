@@ -41,9 +41,9 @@ sbt run
 # Accéder à l'Application
 ```bash
 # Une fois l'application démarrée, accédez-y via le navigateur ou tapez sur une console ou tout autre client d'application.
-curl -i "http://localhost:8080/temperature/paris"
-curl -i "http://localhost:8080/temperature/recommendation/lyon"
-curl -i "http://localhost:8080/meteo/pluie"
+curl -i "http://localhost:8080/temperature/chicago"
+curl -i "http://localhost:8080/temperature/recommendation/london"
+curl -i "http://localhost:8080/meteo/rainy"
 ```
 
 # Nettoyage ou éteindre la base de donnée

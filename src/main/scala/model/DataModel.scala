@@ -6,16 +6,24 @@ object DataModel {
   opaque type Longitude = Double
   opaque type CityName = String
   opaque type Date = String
+  opaque type Temperature = Double
 
   case class Coordinates(latitude: Latitude, longitude: Longitude)
 
   case class City(name: CityName, coordinates: Coordinates)
 
   case class CurrentWeather(coordinates: Coordinates,
-                            temperature: Double,
-                            weatherDescription: String,
+                            temperature: Temperature,
+                            weatherDescription: WeatherStatus,
                             date: Date)
 
+  case class TemperatureRecommendation(
+                                        temperatureRange: String,
+                                        minTemperature: Option[Double],
+                                        maxTemperature: Option[Double],
+                                        recommendation: String
+                                      )
+
   enum WeatherStatus:
-    case Sun, Rain, Snow
+    case Sunny, Rainy, Snowy, Cloudy, Clear, PartlyCloudy
 }

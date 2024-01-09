@@ -1,20 +1,18 @@
 package controller
 
-import service.TemperatureService
+import service.TemperatureServiceImpl.{getRecommandationByCity, getTemperatureOfCity}
 import zio.http.*
 
 object TemperatureController {
-
-  val temperatureService = new TemperatureService
 
   def apply(): Http[Any, Throwable, Request, Response] =
     Http.collect[Request] {
       // GET /temperature/{name}
       case Method.GET -> Root / "temperature" / cityName =>
-        Response.text(temperatureService.getTemperatureOfCity(cityName))
+        Response.text(getTemperatureOfCity(cityName))
 
       // GET /temperature/recommendation/{name}
       case Method.GET -> Root / "temperature" / "recommendation" / cityName =>
-        Response.text(temperatureService.getRecommandationByCity(cityName))
+        Response.text(getRecommandationByCity(cityName))
     }
 }
