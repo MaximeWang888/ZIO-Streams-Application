@@ -10,27 +10,6 @@ class DataModelDao(dbManager: DatabaseManager) {
   private var preparedStatement: PreparedStatement = _
   private var resultSet: ResultSet = _
 
-  def getTemperatureFromCoord(coordinates: Coordinates): Option[DataModel.Temperature] = {
-    try {
-      val query = "SELECT temperature, weatherDescription, date FROM CurrentWeather WHERE latitude = ? AND longitude = ?"
-      preparedStatement = connection.prepareStatement(query)
-      preparedStatement.setDouble(1, coordinates.latitude.asInstanceOf[Double])
-      preparedStatement.setDouble(2, coordinates.longitude.asInstanceOf[Double])
-
-      resultSet = preparedStatement.executeQuery()
-
-      if (resultSet.next()) {
-        val temperature = resultSet.getDouble("temperature")
-        Some(temperature.asInstanceOf[DataModel.Temperature])
-      } else {
-        None
-      }
-    } finally {
-      if (preparedStatement != null) preparedStatement.close()
-      if (resultSet != null) resultSet.close()
-    }
-  }
-
   def getAllCities: Option[List[DataModel.City]] = {
     try {
       val query = "SELECT name, latitude, longitude FROM City"
