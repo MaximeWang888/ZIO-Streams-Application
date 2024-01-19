@@ -42,7 +42,7 @@ sbt run
 ```bash
 # Une fois l'application démarrée, accédez-y via le navigateur ou tapez sur une console ou tout autre client d'application.
 curl -i "http://localhost:8080/temperature/chicago"
-curl -i "http://localhost:8080/temperature/recommendation/london"
+curl -i "http://localhost:8080/temperature/recommendation/chicago"
 curl -i "http://localhost:8080/meteo/rainy"
 ```
 
@@ -71,6 +71,7 @@ Voici la structure des répertoires de ce projet :
 │   │   │   │   └── DatabaseManager.scala
 │   │   │   ├── service
 │   │   │   │   ├── TemperatureService.scala
+│   │   │   │   ├── TemperatureSteam.scala
 │   │   │   │   └── WeatherService.scala
 │   │   │   └── MainApp.scala
 │   │   └── resources
@@ -101,3 +102,36 @@ De plus, il y a les fichiers DatabaseManager et DataModelDao pour gérer l'accè
 - README.md: Fichier de documentation principal.
 - .gitignore: Fichier spécifiant les fichiers et répertoires à ignorer lors de la gestion de version avec Git.
 - docker-compose.yml: Fichier de configuration Docker Compose.
+
+# Mon Application Scala avec ZIO Stream
+
+Mon application Scala suit une architecture MVC (Modèle-Vue-Contrôleur), ce qui facilite l'organisation et la maintenance du code.  L'appli est conçue pour récupérer périodiquement les données de température actuelle d'une API météo et les stocker dans une base de données. Voici un aperçu des composants clés de l'application :
+
+## TemperatureStream
+
+Le fichier `TemperatureStream.scala` dans le package `service` contient la logique de streaming pour récupérer les données de température à partir de l'API OpenWeatherMap. Voici ce qu'il fait :
+
+- **`extractTemperature` :** Cette fonction analyse la réponse de l'API pour extraire la température actuelle.
+- **`fetchData` :** Cette fonction effectue la requête HTTP pour obtenir les données météorologiques de l'API.
+- **`appLogic` :** Cette ZIO Stream effectue une requête périodique à l'API, extrait la température de la réponse, et l'insère dans la base de données à l'aide de `dataModelDao`.
+
+### Note
+
+Nous avons actuellement implémenté la ZStream pour récupérer la température de manière périodique uniquement pour la ville de Chicago. Cela signifie que si vous souhaitez obtenir la température en temps réel d'une autre ville, cela ne sera possible qu'avec Chicago pour le moment. Cependant, il est tout à fait réalisable d'étendre cette fonctionnalité en ajoutant d'autres ZStream qui récupèreront la température pour différentes coordonnées correspondant aux différentes villes que vous souhaitez inclure.
+
+Il est important de noter que la fréquence de récupération est actuellement définie à une périodicité de 5 minutes. Cette fréquence a été choisie en tenant compte du fait que la température d'une ville ne change généralement pas de manière significative en une courte période, permettant ainsi une mise à jour régulière sans surcharger inutilement les requêtes vers l'API météo.
+
+En résumé, pour chaque ville que vous souhaitez inclure dans votre application, vous pouvez ajouter un nouveau ZStream spécifique à cette ville pour récupérer sa température actuelle de manière périodique.
+
+## MainApp
+
+Le fichier `MainApp.scala` agit comme le point d'entrée principal de l'application. Il combine le streaming de température avec un serveur HTTP pour exposer les fonctionnalités de l'application via des endpoints. Voici un aperçu des composants clés :
+
+- **`server` :** Cette ZIO effectue le lancement du serveur HTTP qui expose les fonctionnalités de l'application via des endpoints.
+- **`backgroundProcess` :** Cette ZIO exécute le streaming de température en arrière-plan tout en servant le serveur HTTP. Cela garantit que les données de température sont constamment mises à jour dans la base de données.
+
+Le controlleur (`Controller`) est représenté par les classes dans le package `controller`, telles que `TemperatureController` et `WeatherController`. Ces classes écoutent sur les différentes routes et redirige les requêtes.
+
+Le modèle (`Model`) est représenté par les classes dans le package `model`, telles que `Coordinates` et `DataModelDao`. Ces classes définissent la structure des données et la logique d'accès à la base de données.
+
+La vue (`View`) n'est pas explicitement mentionnée dans ce contexte car elle peut prendre différentes formes selon les besoins. Dans notre cas, elle pourrait être une interface utilisateur (UI) qui consomme les données de l'API via les endpoints exposés par le serveur.

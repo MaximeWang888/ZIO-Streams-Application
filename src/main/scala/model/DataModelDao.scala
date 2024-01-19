@@ -10,9 +10,41 @@ class DataModelDao(dbManager: DatabaseManager) {
   private var preparedStatement: PreparedStatement = _
   private var resultSet: ResultSet = _
 
-  def insertCoordinates(coord: Coordinates): Unit = ??? //TODO
+  def insertCoordinates(coord: Coordinates): Unit = {
+    try {
+      val query =
+        "INSERT IGNORE INTO Coordinates (latitude, longitude) VALUES (?, ?)" +
+          "ON DUPLICATE KEY UPDATE latitude = VALUES(latitude), longitude = VALUES(longitude)"
+      preparedStatement = connection.prepareStatement(query)
+      preparedStatement.setDouble(1, coord.latitude.asInstanceOf)
+      preparedStatement.setDouble(2, coord.longitude.asInstanceOf)
 
-  def insertTempInDB(temperature: Double, coord: Coordinates): Unit = ??? //TODO
+      preparedStatement.executeUpdate()
+    } finally {
+      if (preparedStatement != null) preparedStatement.close()
+    }
+  }
+
+  def insertTempInDB(temperature: Double, coord: Coordinates): Unit = {
+    // Ensure that the coordinates exist in the Coordinates table
+    insertCoordinates(coord)
+
+    try {
+      val query =
+        "INSERT INTO CurrentWeather (latitude, longitude, temperature, weatherDescription, date) " +
+          "VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP) " +
+          "ON DUPLICATE KEY UPDATE temperature = VALUES(temperature), date = CURRENT_TIMESTAMP"
+      preparedStatement = connection.prepareStatement(query)
+      preparedStatement.setDouble(1, coord.latitude.asInstanceOf)
+      preparedStatement.setDouble(2, coord.longitude.asInstanceOf)
+      preparedStatement.setDouble(3, temperature)
+      preparedStatement.setString(4, "SUNNY")
+
+      preparedStatement.executeUpdate()
+    } finally {
+      if (preparedStatement != null) preparedStatement.close()
+    }
+  }
 
 
   def getTemperatureFromCoord(coordinates: Coordinates): Option[DataModel.Temperature] = {
@@ -26,7 +58,7 @@ class DataModelDao(dbManager: DatabaseManager) {
 
       if (resultSet.next()) {
         val temperature = resultSet.getDouble("temperature")
-        Some(temperature.asInstanceOf)
+        Some(temperature.asInstanceOf[DataModel.Temperature])
       } else {
         None
       }
