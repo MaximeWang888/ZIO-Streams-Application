@@ -7,15 +7,16 @@ object WeatherController {
 
   def apply(): Http[Any, Throwable, Request, Response] =
     Http.collect[Request] {
-      // Définition d'un service HTTP qui traite les requêtes entrantes
-      case Method.GET -> Root / "meteo" / condition =>
-        // Pour les requêtes GET vers l'endpoint /meteo/{condition}
+      // Define an HTTP service that handles incoming requests
+      case Method.GET -> Root / "weather" / condition =>
+        // For GET requests to the /weather/{condition} endpoint
 
-        // Appel de la fonction getCitiesMatchingWeatherCondition avec le paramètre de condition
+        // Call the getCitiesMatchingWeatherCondition function with the condition parameter
         val result = getCitiesMatchingWeatherCondition(condition)
 
-        // Création d'une réponse HTTP textuelle avec le résultat obtenu
+        // Create a textual HTTP response with the obtained result
         Response.text(result)
     }
+
 
 }

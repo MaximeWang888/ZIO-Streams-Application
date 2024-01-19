@@ -8,36 +8,38 @@ trait WeatherService {
 }
 
 object WeatherService {
-  // Initialisation d'un objet DatabaseManager et DataModelDao pour la gestion des données
+  // Initialize a DatabaseManager object and DataModelDao for data management
   private val dbManager = new DatabaseManager()
   private val dataModelDao = new DataModelDao(dbManager)
 
-  // Méthode qui retourne une séquence de caractères correspondant aux villes avec une condition météorologique spécifiée
+  // Method that returns a character sequence corresponding to cities with a specified weather condition
   def getCitiesMatchingWeatherCondition(condition: String): CharSequence = {
-    // Récupération de toutes les villes à partir de la base de données
+    // Retrieve all cities from the database
     val allCitiesResult = dataModelDao.getAllCities
 
-    // Utilisation du pattern matching pour gérer les cas où la récupération des villes réussit ou échoue
+    // Use pattern matching to handle cases where city retrieval succeeds or fails
     val result: CharSequence = allCitiesResult match {
       case Some(cities) =>
-        // Filtrage des villes qui correspondent à la condition météorologique spécifiée
+        // Filter cities that match the specified weather condition
         val matchingCities = cities.filter { city =>
           val weatherCondition = dataModelDao.getWeatherConditionForCity(city.name)
           weatherCondition.equalsIgnoreCase(condition)
         }
 
-        // Vérification si des villes correspondent à la condition météorologique
+        // Check if there are cities matching the weather condition
         if (matchingCities.nonEmpty) {
-          // Création d'une chaîne de caractères avec les noms des villes correspondantes
+          // Create a character sequence with the names of the matching cities
           val cityNames = matchingCities.map(_.name)
           cityNames.mkString(", ")
         } else {
-          // Message en cas d'absence de villes correspondantes
+          // Message in case there are no cities matching the specified weather condition
           "No cities match the specified weather condition."
         }
 
-      case None => "Failed to retrieve cities data."  // Message en cas d'échec de récupération des données des villes
+      case None => "Failed to retrieve cities data."  // Message in case of failure to retrieve city data
     }
+
+    // Return the resulting character sequence
     result
   }
 }
