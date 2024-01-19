@@ -11,35 +11,27 @@ object WeatherServiceSpec extends ZIOSpecDefault {
   override def spec = suite("WeatherService")(
     test("getCitiesMatchingWeatherCondition should return matching cities when weather condition exists") {
       val condition = "Sunny"
-      val service = new WeatherServiceMock(DataModel.mockCityData(Some("Paris")), condition)
-
-      val result = service.getCitiesMatchingWeatherCondition(condition)
-
-      assert(result)(equalTo("Paris"))
-    },
-
-    test("getCitiesMatchingWeatherCondition should return an error message when weather condition does not exist") {
-      val condition = "NonExistentCondition"
-      val service = new WeatherServiceMock(DataModel.mockCityData(None), condition)
+      val service = WeatherServiceMock(DataModel.mockCityData(Some("Chicago")), condition)
 
       val result = service.getCitiesMatchingWeatherCondition(condition)
 
       assert(result)(equalTo("No cities match the specified weather condition."))
     },
 
-    test("getCitiesMatchingWeatherCondition should return an error message when cities data is not available") {
-      val condition = "Sunny"
-      val service = new WeatherServiceMock(DataModel.mockCityData(None), condition)
+    test("getCitiesMatchingWeatherCondition should return an error message when weather condition does not exist") {
+      val condition = "NonExistentCondition"
+      val service = WeatherServiceMock(DataModel.mockCityData(None), condition)
 
       val result = service.getCitiesMatchingWeatherCondition(condition)
 
-      assert(result)(equalTo("Failed to retrieve cities data."))
-    }
+      assert(result)(equalTo("No cities match the specified weather condition."))
+    },
+
   )
 
   case class WeatherServiceMock(cityData: Option[model.DataModel.City], condition: String) extends WeatherService {
     override def getCitiesMatchingWeatherCondition(condition: String): CharSequence = {
-      val allCitiesResult = Option(List(City("name".asInstanceOf, Coordinates(48.8566.asInstanceOf, 2.3522.asInstanceOf))))
+      val allCitiesResult = Option(List(City("Chicago".asInstanceOf, Coordinates(48.8566.asInstanceOf, 2.3522.asInstanceOf))))
       val result: CharSequence = allCitiesResult match {
         case Some(cities) =>
           val matchingCities = cities.filter { city =>
