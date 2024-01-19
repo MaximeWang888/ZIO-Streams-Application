@@ -65,17 +65,14 @@ object TemperatureService {
                 // If recommendation data is not found, indicate failure to retrieve recommendation data
                 "Failed to retrieve recommendation data for the city."
             }
-
           case None =>
             // If temperature data is not found, indicate failure to retrieve temperature data
             "Failed to retrieve temperature data for the city."
         }
-
       case None =>
         // If city information is not found, indicate failure to retrieve city data
         "Failed to retrieve cities data."
     }
-
     result
   }
 }

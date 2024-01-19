@@ -16,6 +16,7 @@ ThisBuild / organization := "fr.efrei"
 ThisBuild / version := "0.1.0-SNAPSHOT"
 ThisBuild / scalaVersion := scala3Version
 
+
 lazy val root = project
   .in(file("."))
   .settings(
@@ -36,5 +37,9 @@ lazy val root = project
           "io.circe" %% "circe-core" % circle,
           "io.circe" %% "circe-generic" % circle,
           "io.circe" %% "circe-parser" % circle,
+          "org.scalatest" %% "scalatest" % "3.2.9" % Test,
+          "dev.zio" %% "zio-test" % "2.0.15" % Test,
+          "dev.zio" %% "zio-test-sbt" % "2.0.13" % Test,
+
       )
   )

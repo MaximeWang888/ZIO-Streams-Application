@@ -29,8 +29,7 @@ object DataModel {
                                         temperatureRange: String,
                                         minTemperature: Option[Double],
                                         maxTemperature: Option[Double],
-                                        recommendation: String
-                                      )
+                                        recommendation: String)
 
   // Enumeration representing different weather statuses
   enum WeatherStatus:
