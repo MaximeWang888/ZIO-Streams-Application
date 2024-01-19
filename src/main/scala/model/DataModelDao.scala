@@ -10,38 +10,54 @@ class DataModelDao(dbManager: DatabaseManager) {
   private var preparedStatement: PreparedStatement = _
   private var resultSet: ResultSet = _
 
+  // Méthode pour insérer les coordonnées dans la table Coordinates de la base de données
   def insertCoordinates(coord: Coordinates): Unit = {
     try {
+      // Définition de la requête SQL pour insérer les coordonnées dans la table Coordinates
       val query =
         "INSERT IGNORE INTO Coordinates (latitude, longitude) VALUES (?, ?)" +
           "ON DUPLICATE KEY UPDATE latitude = VALUES(latitude), longitude = VALUES(longitude)"
+
+      // Préparation de la requête SQL avec la connexion à la base de données
       preparedStatement = connection.prepareStatement(query)
+
+      // Attribution des valeurs des coordonnées aux paramètres de la requête SQL
       preparedStatement.setDouble(1, coord.latitude.asInstanceOf)
       preparedStatement.setDouble(2, coord.longitude.asInstanceOf)
 
+      // Exécution de la requête SQL
       preparedStatement.executeUpdate()
     } finally {
+      // Fermeture de la PreparedStatement dans le bloc finally pour garantir la libération des ressources
       if (preparedStatement != null) preparedStatement.close()
     }
   }
 
+  // Méthode pour insérer la température dans la table CurrentWeather de la base de données
   def insertTempInDB(temperature: Double, coord: Coordinates): Unit = {
-    // Ensure that the coordinates exist in the Coordinates table
+    // Assurer que les coordonnées existent dans la table Coordinates
     insertCoordinates(coord)
 
     try {
+      // Définition de la requête SQL pour insérer la température dans la table CurrentWeather
       val query =
         "INSERT INTO CurrentWeather (latitude, longitude, temperature, weatherDescription, date) " +
           "VALUES (?, ?, ?, ?, CURRENT_TIMESTAMP) " +
           "ON DUPLICATE KEY UPDATE temperature = VALUES(temperature), date = CURRENT_TIMESTAMP"
+
+      // Préparation de la requête SQL avec la connexion à la base de données
       preparedStatement = connection.prepareStatement(query)
+
+      // Attribution des valeurs des coordonnées et de la température aux paramètres de la requête SQL
       preparedStatement.setDouble(1, coord.latitude.asInstanceOf)
       preparedStatement.setDouble(2, coord.longitude.asInstanceOf)
       preparedStatement.setDouble(3, temperature)
       preparedStatement.setString(4, "SUNNY")
 
+      // Exécution de la requête SQL
       preparedStatement.executeUpdate()
     } finally {
+      // Fermeture de la PreparedStatement dans le bloc finally pour garantir la libération des ressources
       if (preparedStatement != null) preparedStatement.close()
     }
   }
