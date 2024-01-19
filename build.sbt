@@ -11,6 +11,7 @@ ThisBuild / organization := "fr.efrei"
 ThisBuild / version := "0.1.0-SNAPSHOT"
 ThisBuild / scalaVersion := scala3Version
 
+
 lazy val root = project
   .in(file("."))
   .settings(
@@ -28,5 +29,11 @@ lazy val root = project
           "dev.zio"       %% "zio-logging-slf4j" % "2.1.15",
           "org.slf4j"      % "slf4j-simple"      % "2.0.9",
           "mysql" % "mysql-connector-java" % "8.0.23",
+          "org.scalatest" %% "scalatest" % "3.2.9" % Test,
+          // "org.scalatestplus.zio" %% "scalatestplus-zio" % "1.0.+",
+          "dev.zio" %% "zio-test" % "2.0.15" % Test,
+
+          "dev.zio" %% "zio-test-sbt" % "2.0.13" % Test,
+
       )
   )

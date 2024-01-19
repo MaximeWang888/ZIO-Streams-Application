@@ -17,12 +17,10 @@ object DataModel {
                             weatherDescription: WeatherStatus,
                             date: Date)
 
-  case class TemperatureRecommendation(
-                                        temperatureRange: String,
+  case class TemperatureRecommendation(temperatureRange: String,
                                         minTemperature: Option[Double],
                                         maxTemperature: Option[Double],
-                                        recommendation: String
-                                      )
+                                        recommendation: String)
 
   enum WeatherStatus:
     case Sunny, Rainy, Snowy, Cloudy, Clear, PartlyCloudy
