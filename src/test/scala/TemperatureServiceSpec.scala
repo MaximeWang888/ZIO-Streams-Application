@@ -19,27 +19,21 @@ object TemperatureServiceSpec extends ZIOSpecDefault {
       test("getTemperatureOfCity should return an error message when temperature data is not available") {
         val cityName = "NonExistentCity"
         val service = new TemperatureServiceMock(DataModel.mockCityData(None))
-
         val result = service.getTemperatureOfCity(cityName)
-
         assert(result)(equalTo("Failed to retrieve cities data."))
       },
 
       test("getTemperatureOfCity should return an error message when city data is not available") {
         val cityName = "NonExistentCity"
         val service = new TemperatureServiceMock(DataModel.mockCityData(None))
-
         val result = service.getTemperatureOfCity(cityName)
-
         assert(result)(equalTo("Failed to retrieve cities data."))
       },
 
       test("getRecommandationByCity should return the correct recommendation when all data is available") {
         val cityName = "Paris"
         val service = new TemperatureServiceMock(DataModel.mockCityData(Some(cityName)))
-
         val result = service.getRecommandationByCity(cityName)
-
         assert(result)(
           equalTo("The recommendation for the city of Paris is: Enjoy the moderate weather!")
         )
@@ -48,17 +42,13 @@ object TemperatureServiceSpec extends ZIOSpecDefault {
       test("getRecommandationByCity should return an error message when city data is not available") {
         val cityName = "NonExistentCity"
         val service = new TemperatureServiceMock(DataModel.mockCityData(None))
-
         val result = service.getRecommandationByCity(cityName)
-
         assert(result)(equalTo("Failed to retrieve cities data."))
       },
 
       test("getRecommandationByCity should return an error message when temperature data is not available") {
         val cityName = "Paris"
         val service = new TemperatureServiceMock(DataModel.mockCityData(None))
-
-        // Mocking temperature data to be None
         val result = service.getRecommandationByCity(cityName)
 
         assert(result)(equalTo("Failed to retrieve cities data."))
@@ -67,8 +57,6 @@ object TemperatureServiceSpec extends ZIOSpecDefault {
       test("getRecommandationByCity should return an error message when recommendation data is not available") {
         val cityName = "Paris"
         val service = new TemperatureServiceMock(DataModel.mockCityData(None))
-
-        // Mocking recommendation data to be None
         val result = service.getRecommandationByCity(cityName)
 
         assert(result)(equalTo("Failed to retrieve cities data."))
