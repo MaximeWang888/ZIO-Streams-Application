@@ -10,18 +10,23 @@ class DataModelDao(dbManager: DatabaseManager) {
   private var preparedStatement: PreparedStatement = _
   private var resultSet: ResultSet = _
 
+  def insertCoordinates(coord: Coordinates): Unit = ??? //TODO
+
+  def insertTempInDB(temperature: Double, coord: Coordinates): Unit = ??? //TODO
+
+
   def getTemperatureFromCoord(coordinates: Coordinates): Option[DataModel.Temperature] = {
     try {
       val query = "SELECT temperature, weatherDescription, date FROM CurrentWeather WHERE latitude = ? AND longitude = ?"
       preparedStatement = connection.prepareStatement(query)
-      preparedStatement.setDouble(1, coordinates.latitude.asInstanceOf[Double])
-      preparedStatement.setDouble(2, coordinates.longitude.asInstanceOf[Double])
+      preparedStatement.setDouble(1, coordinates.latitude.asInstanceOf)
+      preparedStatement.setDouble(2, coordinates.longitude.asInstanceOf)
 
       resultSet = preparedStatement.executeQuery()
 
       if (resultSet.next()) {
         val temperature = resultSet.getDouble("temperature")
-        Some(temperature.asInstanceOf[DataModel.Temperature])
+        Some(temperature.asInstanceOf)
       } else {
         None
       }
@@ -45,9 +50,9 @@ class DataModelDao(dbManager: DatabaseManager) {
         val latitude = resultSet.getDouble("latitude")
         val longitude = resultSet.getDouble("longitude")
 
-        val coordinates = DataModel.Coordinates(latitude.asInstanceOf[DataModel.Latitude],
-                                                longitude.asInstanceOf[DataModel.Longitude])
-        val city = DataModel.City(cityName.asInstanceOf[DataModel.CityName], coordinates)
+        val coordinates = DataModel.Coordinates(latitude.asInstanceOf,
+                                                longitude.asInstanceOf)
+        val city = DataModel.City(cityName.asInstanceOf, coordinates)
         cities = cities :+ city
       }
 
@@ -75,9 +80,9 @@ class DataModelDao(dbManager: DatabaseManager) {
         val latitude = resultSet.getDouble("latitude")
         val longitude = resultSet.getDouble("longitude")
 
-        val coordinates = DataModel.Coordinates(latitude.asInstanceOf[DataModel.Latitude],
-                                                longitude.asInstanceOf[DataModel.Longitude])
-        Some(DataModel.City(cityName.asInstanceOf[DataModel.CityName], coordinates))
+        val coordinates = DataModel.Coordinates(latitude.asInstanceOf,
+                                                longitude.asInstanceOf)
+        Some(DataModel.City(cityName.asInstanceOf, coordinates))
       } else {
         None
       }
@@ -94,8 +99,8 @@ class DataModelDao(dbManager: DatabaseManager) {
           "FROM TemperatureRecommendation " +
           "WHERE ? >= minTemperature OR (minTemperature IS NULL AND ? <= maxTemperature)"
       preparedStatement = connection.prepareStatement(query)
-      preparedStatement.setDouble(1, temperature.asInstanceOf[Double])
-      preparedStatement.setDouble(2, temperature.asInstanceOf[Double])
+      preparedStatement.setDouble(1, temperature.asInstanceOf)
+      preparedStatement.setDouble(2, temperature.asInstanceOf)
 
       resultSet = preparedStatement.executeQuery()
 
@@ -120,15 +125,14 @@ class DataModelDao(dbManager: DatabaseManager) {
       val query = "SELECT weatherDescription FROM CurrentWeather WHERE latitude = " +
         "(SELECT latitude FROM City WHERE name = ?) AND longitude = (SELECT longitude FROM City WHERE name = ?)"
       preparedStatement = connection.prepareStatement(query)
-      preparedStatement.setString(1, cityName.asInstanceOf[String])
-      preparedStatement.setString(2, cityName.asInstanceOf[String])
+      preparedStatement.setString(1, cityName.asInstanceOf)
+      preparedStatement.setString(2, cityName.asInstanceOf)
 
       resultSet = preparedStatement.executeQuery()
 
       if (resultSet.next()) {
         resultSet.getString("weatherDescription")
       } else {
-        // You may handle the case when the weather description is not available
         "Unknown"
       }
     } finally {
