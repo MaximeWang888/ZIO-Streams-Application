@@ -8,7 +8,7 @@ object WeatherController {
   def apply(): Http[Any, Throwable, Request, Response] =
     Http.collect[Request] {
       // Define an HTTP service that handles incoming requests
-      case Method.GET -> Root / "weather" / condition =>
+      case Method.GET -> Root / "meteo" / condition =>
         // For GET requests to the /weather/{condition} endpoint
 
         // Call the getCitiesMatchingWeatherCondition function with the condition parameter
