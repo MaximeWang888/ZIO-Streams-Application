@@ -5,7 +5,12 @@ val zioHttpVersion = "3.0.0-RC2"
 val scalaCsvVersion = "1.3.10"
 val zioQuill = "4.7.0"
 val zioQuillJdbc = "4.7.0"
+val zioLogging = "2.1.15"
+val zhttp = "2.0.0-RC10"
 val h2Database = "2.2.224"
+val slf4jSimple = "2.0.9"
+val circle = "0.14.5"
+val mysqlVersion = "8.0.23"
 
 ThisBuild / organization := "fr.efrei"
 ThisBuild / version := "0.1.0-SNAPSHOT"
@@ -24,15 +29,16 @@ lazy val root = project
           "io.getquill"   %% "quill-zio"      % zioQuill,
           "io.getquill"   %% "quill-jdbc-zio" % zioQuillJdbc,
           "com.h2database" % "h2"             % h2Database,
-          "io.d11"        %% "zhttp"          % "2.0.0-RC10",
-          "dev.zio"       %% "zio-logging"       % "2.1.15",
-          "dev.zio"       %% "zio-logging-slf4j" % "2.1.15",
-          "org.slf4j"      % "slf4j-simple"      % "2.0.9",
-          "mysql" % "mysql-connector-java" % "8.0.23",
+          "io.d11"        %% "zhttp"          % zhttp,
+          "dev.zio"       %% "zio-logging"       % zioLogging,
+          "dev.zio"       %% "zio-logging-slf4j" % zioLogging,
+          "org.slf4j"      % "slf4j-simple"      % slf4jSimple,
+          "mysql" % "mysql-connector-java" % mysqlVersion,
+          "io.circe" %% "circe-core" % circle,
+          "io.circe" %% "circe-generic" % circle,
+          "io.circe" %% "circe-parser" % circle,
           "org.scalatest" %% "scalatest" % "3.2.9" % Test,
-          // "org.scalatestplus.zio" %% "scalatestplus-zio" % "1.0.+",
           "dev.zio" %% "zio-test" % "2.0.15" % Test,
-
           "dev.zio" %% "zio-test-sbt" % "2.0.13" % Test,
 
       )
